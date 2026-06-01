@@ -140,8 +140,8 @@ export function Hero() {
       {/* VÍDEO — pausado, frame 0 */}
       <video
         ref={videoRef}
-        src="/layout_triamici/midias/video_bg.mp4"
-        poster="/layout_triamici/midias/camera_bg.png"
+        src="/midias/video_bg.mp4"
+        poster="/midias/camera_bg.png"
         muted
         playsInline
         preload="auto"
@@ -161,7 +161,7 @@ export function Hero() {
           Sorocaba · SP · Desde 2000
         </p>
 
-        <h1 className="font-serif text-[clamp(2.1rem,8.5vw,2.75rem)] leading-[1.05] md:text-8xl">
+        <h1 className="font-serif text-[clamp(2.5rem,10vw,3.5rem)] leading-[1.02] md:text-8xl">
           <span ref={titleRef} className="block will-change-[transform,opacity]">
             Fotografia que muda
           </span>
@@ -181,12 +181,11 @@ export function Hero() {
         </p>
 
         <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4 md:mt-12">
-          <Button href="/contato">Quero a aula gratuita</Button>
+          <Button href="https://wa.me/5515981127508" external>Quero a aula gratuita</Button>
           <Button href="/sobre" variant="outline">Conheça a escola</Button>
         </div>
       </div>
-
-
+      
     </section>
   )
 }
