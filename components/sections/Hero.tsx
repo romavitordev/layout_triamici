@@ -140,8 +140,8 @@ export function Hero() {
       {/* VÍDEO — pausado, frame 0 */}
       <video
         ref={videoRef}
-        src="/midias/video_bg.mp4"
-        poster="/midias/camera_bg.png"
+        src="/layout_triamici/midias/video_bg.mp4"
+        poster="/layout_triamici/midias/camera_bg.png"
         muted
         playsInline
         preload="auto"

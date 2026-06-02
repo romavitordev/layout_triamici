@@ -17,9 +17,7 @@ export function Footer() {
         <nav className="grid gap-3 text-sm uppercase tracking-[0.16em] text-branco/75">
           <Link href="/sobre" className="hover:text-dourado">Sobre</Link>
           <Link href="/curso" className="hover:text-dourado">Curso</Link>
-          <Link href="/contato" className="hover:text-dourado">Contato</Link>
-          </Link>
-        </nav>
+          <Link href="/contato" className="hover:text-dourado">Contato</Link>        </nav>
 
         <div className="text-sm leading-7 text-cinza">
           <p>Rua Amapá 112, Vila Augusto, Sorocaba/SP</p>

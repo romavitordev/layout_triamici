@@ -1,106 +1,195 @@
-import type { Metadata } from 'next'
+'use client'
+
 import Image from 'next/image'
-import { Camera, Eye, TrendingUp } from 'lucide-react'
+import { useState } from 'react'
+import {
+  Camera, Eye, TrendingUp,
+  Clock, Calendar, MapPin, Users, Award, Sparkles, Bell,
+  CheckCircle2, XCircle, MessageCircle, ChevronDown,
+} from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { ScrollReveal } from '@/components/ui/ScrollReveal'
 import { Recursos } from '@/components/sections/Recursos'
 
-export const metadata: Metadata = {
-  title: 'Curso Profissional de Fotografia',
-  description: 'Curso profissional de fotografia Tri Amici: prático, intenso, divertido e sem conhecimento prévio necessário.'
-}
-
-const modulos = [
+// ────────────────────────────────────────────────────────────────────
+// CURRÍCULO em 3 FASES (vs lista plana de 6 módulos)
+// ────────────────────────────────────────────────────────────────────
+const fases: { fase: string; titulo: string; resumo: string; modulos: { num: string; titulo: string; desc: string }[] }[] = [
   {
-    num: '01',
-    titulo: 'Câmera DSLR do zero ao avançado',
-    desc: 'Domine o triângulo da exposição, modos manuais, lentes e configurações para fotografar com intenção em qualquer situação de luz.',
+    fase: 'Fase 01',
+    titulo: 'Fundação',
+    resumo: 'Você sai operando a câmera com intenção — qualquer luz, qualquer situação.',
+    modulos: [
+      { num: '01', titulo: 'Câmera DSLR do zero ao avançado',  desc: 'Triângulo da exposição, modos manuais, lentes e configurações para fotografar com intenção em qualquer situação de luz.' },
+      { num: '02', titulo: 'Luz natural e estúdio profissional', desc: 'Ler e modelar a luz — do sol da tarde ao flash de estúdio com difusores, rebatedores e modificadores de luz.' },
+    ],
   },
   {
-    num: '02',
-    titulo: 'Luz natural e estúdio profissional',
-    desc: 'Aprenda a ler e modelar a luz — do sol da tarde ao flash de estúdio com difusores, rebatedores e modificadores de luz.',
+    fase: 'Fase 02',
+    titulo: 'Linguagem',
+    resumo: 'Você passa de tirar fotos a contar histórias com elas.',
+    modulos: [
+      { num: '03', titulo: 'Direção de retrato e books', desc: 'Direção de olhar, postura, expressão e construção de narrativa visual em ensaios fotográficos de retrato.' },
+      { num: '04', titulo: 'Fotodocumentário e narrativa visual', desc: 'Contar histórias com imagens: sequência, edição de galeria, fotojornalismo e a linguagem do ensaio documental.' },
+      { num: '05', titulo: 'Edição, fluxo e calibração de monitor', desc: 'Lightroom, Photoshop, exportação, gestão de arquivos e colorimetria para uma entrega profissional e consistente.' },
+    ],
   },
   {
-    num: '03',
-    titulo: 'Direção de retrato e books',
-    desc: 'Técnicas de direção de olhar, postura, expressão e criação de narrativa visual em ensaios fotográficos de retrato.',
-  },
-  {
-    num: '04',
-    titulo: 'Fotodocumentário e narrativa visual',
-    desc: 'Contar histórias com imagens: sequência, edição de galeria, fotojornalismo e a linguagem do ensaio documental.',
-  },
-  {
-    num: '05',
-    titulo: 'Edição, fluxo e calibração de monitor',
-    desc: 'Lightroom, Photoshop, exportação, gestão de arquivos e colorimetria para uma entrega profissional e consistente.',
-  },
-  {
-    num: '06',
-    titulo: 'Mercado, precificação e direito autoral',
-    desc: 'Contratos, valores de mercado, lei de imagem, gestão de clientes e como montar o primeiro portfólio profissional.',
+    fase: 'Fase 03',
+    titulo: 'Mercado',
+    resumo: 'Você termina com portfólio e clareza pra cobrar pelo seu olhar.',
+    modulos: [
+      { num: '06', titulo: 'Mercado, precificação e direito autoral', desc: 'Contratos, valores de mercado, lei de imagem, gestão de clientes e como montar o primeiro portfólio profissional.' },
+    ],
   },
 ]
 
 const pilares = [
-  {
-    Icon: Camera,
-    titulo: 'Técnica',
-    desc: 'Câmera, luz, composição e edição como ferramentas — não como fins. O domínio técnico liberta o olhar criativo.',
-  },
-  {
-    Icon: Eye,
-    titulo: 'Olhar',
-    desc: 'Repertório visual, história da fotografia, leitura crítica de imagens e o desenvolvimento de uma voz autoral única.',
-  },
-  {
-    Icon: TrendingUp,
-    titulo: 'Mercado',
-    desc: 'Precificação, portfólio, contratos, direito autoral e como transformar técnica e olhar em renda consistente.',
-  },
+  { Icon: Camera,       titulo: 'Técnica',  desc: 'Câmera, luz, composição e edição como ferramentas — não como fins. O domínio técnico liberta o olhar criativo.' },
+  { Icon: Eye,          titulo: 'Olhar',    desc: 'Repertório visual, história da fotografia, leitura crítica de imagens e desenvolvimento de uma voz autoral única.' },
+  { Icon: TrendingUp,   titulo: 'Mercado',  desc: 'Precificação, portfólio, contratos, direito autoral e como transformar técnica e olhar em renda consistente.' },
 ]
 
-const logistica = [
-  ['Duração', '6 meses'],
-  ['Aulas', '2× por semana'],
-  ['Formato', 'Presencial'],
-  ['Turmas', 'Máx. 12 alunos'],
-  ['Local', 'Sorocaba · SP'],
-  ['Certificado', 'Incluso'],
+const logistica: { Icon: typeof Clock; label: string; value: string }[] = [
+  { Icon: Clock,    label: 'Duração',       value: '1 semestre · 6 meses' },
+  { Icon: Calendar, label: 'Encontros',     value: '1× por semana, à noite' },
+  { Icon: MapPin,   label: 'Formato',       value: 'Presencial · Sorocaba/SP' },
+  { Icon: Users,    label: 'Vagas',         value: 'Padrão até 12 · VIP intimista' },
+  { Icon: Award,    label: 'Certificado',   value: 'Incluso' },
+  { Icon: Sparkles, label: 'Material',      value: 'Apostila e e-book' },
 ]
+
+// FAQ
+const faq: { q: string; a: string }[] = [
+  { q: 'Preciso ter câmera própria?',
+    a: 'Sim — você vai usar a sua câmera nas aulas, é parte essencial da prática. Não precisa ser de última geração: uma DSLR ou mirrorless de entrada já é suficiente para começar. Se ainda não tem, orientamos a melhor compra conforme seu objetivo e orçamento antes da matrícula.' },
+  { q: 'Atende quem nunca pegou uma câmera?',
+    a: 'Sim — a Fase 1 (Fundação) começa do zero absoluto. A maior parte dos alunos chega assim e termina cobrando pelos próprios trabalhos.' },
+  { q: 'Qual o dia da semana das aulas?',
+    a: 'O dia é definido a cada semestre, na formação da turma, pelo professor — em conjunto com os alunos matriculados. Pode ser, por exemplo, terça-feira em um semestre, e quinta-feira no seguinte. Os encontros são sempre à noite, 1× por semana.' },
+  { q: 'Qual a diferença entre a turma Padrão e a turma VIP?',
+    a: 'A turma Padrão tem até 12 alunos e segue o cronograma da escola. A turma VIP é intimista, com poucos alunos — mais atenção individual, mais tempo de estúdio para cada um e flexibilidade maior no calendário. Mesmos 6 módulos e mesma certificação.' },
+  { q: 'Quando começa a próxima turma?',
+    a: 'As vagas abrem por semestre. Para receber o aviso assim que abrirem (e antes da divulgação geral), deixe seu nome em "Notifique-me" no card de turmas acima.' },
+  { q: 'Quanto tempo dura?',
+    a: 'Um semestre — 6 meses, com um encontro semanal à noite. Carga horária total e cronograma são entregues com a brochura.' },
+  { q: 'O curso tem certificado?',
+    a: 'Sim. Certificado de conclusão Tri Amici Photography Academy ao final dos 6 módulos, válido para as duas modalidades (Padrão e VIP).' },
+  { q: 'Qual é o investimento?',
+    a: 'Os valores são apresentados na conversa de matrícula — preferimos te explicar o que está incluso (aulas, estúdio, apostila, certificado, acesso à galeria) antes de falar de número. Chame no WhatsApp para saber.' },
+  { q: 'Tem aula de teste antes de matricular?',
+    a: 'Sim. A Aula Zero é gratuita e sem compromisso — você vive uma aula real na escola para decidir com base na experiência.' },
+]
+
+function FaqItem({ q, a }: { q: string; a: string }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <li className="border-b border-borda">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        className="flex w-full items-center justify-between gap-6 py-5 text-left transition-colors hover:text-dourado"
+        aria-expanded={open}
+      >
+        <span className="font-serif text-lg leading-snug text-branco md:text-xl">{q}</span>
+        <ChevronDown
+          size={18}
+          className={`shrink-0 text-dourado transition-transform duration-300 ${open ? 'rotate-180' : ''}`}
+        />
+      </button>
+      <div
+        className={`grid overflow-hidden text-sm leading-7 text-cinza transition-[grid-template-rows,opacity] duration-300 ${open ? 'grid-rows-[1fr] pb-5 opacity-100' : 'grid-rows-[0fr] opacity-0'}`}
+      >
+        <p className="min-h-0">{a}</p>
+      </div>
+    </li>
+  )
+}
+
+const WHATSAPP_LINK =
+  'https://wa.me/5515981127508?text=' +
+  encodeURIComponent('Olá! Vim pela página do curso e gostaria de saber o investimento e a próxima turma.')
+
+const WHATSAPP_NOTIFY =
+  'https://wa.me/5515981127508?text=' +
+  encodeURIComponent('Olá! Quero ser avisado(a) assim que abrir a próxima turma do curso.')
+
+// TODO: tornar o "Notifique-me" funcional — endpoint POST /api/notify-turma
+// criando lead tipo='NOTIFICAR_TURMA' na tabela `leads` (já existe).
+// Por ora o botão grande leva ao WhatsApp e o link discreto exibe um aviso.
+function NotifyButton() {
+  const [shown, setShown] = useState(false)
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setShown(true)}
+        className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-dourado underline-offset-4 hover:underline"
+      >
+        <Bell size={14} /> Notifique-me quando abrir
+      </button>
+      {shown && (
+        <p className="mt-3 rounded-lg border border-dourado/30 bg-dourado/[0.07] px-4 py-3 text-xs leading-6 text-branco/85">
+          Em breve teremos um formulário aqui. Por enquanto, peça pelo WhatsApp —
+          a gente te avisa antes da divulgação geral.
+        </p>
+      )}
+    </>
+  )
+}
 
 export default function CursoPage() {
   return (
     <>
-      {/* ── HERO ─────────────────────────────────────────────── */}
+      {/* ── HERO ────────────────────────────────────────────── */}
       <section className="bg-preto pb-20 pt-32">
         <div className="container-page">
           <ScrollReveal>
             <p className="section-kicker">Curso profissional</p>
-            <h1 className="mt-4 max-w-5xl font-serif text-4xl leading-tight md:text-5xl lg:text-7xl">
-              Sem técnicas supérfluas. Essencialmente prático.
+            <h1 className="mt-5 max-w-[20ch] text-balance font-serif text-[clamp(2.25rem,6vw,5.25rem)] leading-[1.05] tracking-[-0.01em]">
+              Sem técnicas supérfluas.<br className="hidden md:block" />
+              <span className="italic text-dourado/95"> Essencialmente prático.</span>
             </h1>
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-cinza">
-              Intenso, divertido e desenhado para quem parte do zero ou quer transformar hobby em trabalho consistente.
+            <p className="mt-7 max-w-2xl text-balance text-base leading-8 text-branco/75 md:text-lg">
+              Em <strong className="text-branco">6 meses</strong>, você sai com domínio técnico,
+              olhar autoral e portfólio para cobrar pelo seu trabalho. Sem pressa, sem firula —
+              direto ao que importa.
             </p>
           </ScrollReveal>
-          <ScrollReveal delay={0.15}>
+
+          <ScrollReveal delay={0.1}>
             <div className="mt-10 flex flex-wrap gap-3 text-xs uppercase tracking-[0.18em] text-dourado">
-              {['Profissional', 'Intenso', 'Divertido', 'Zero conhecimento prévio'].map((b) => (
+              {['Profissional', 'Intenso', 'Divertido', 'Do zero ao mercado'].map((b) => (
                 <span key={b} className="border border-dourado/40 px-4 py-2">{b}</span>
               ))}
             </div>
           </ScrollReveal>
+
+          {/* Prova social compacta */}
+          <ScrollReveal delay={0.18}>
+            <dl className="mt-12 grid max-w-2xl grid-cols-3 gap-6 border-t border-borda pt-8">
+              {[
+                ['25', 'anos de escola'],
+                ['1.600+', 'fotos publicadas'],
+                ['12', 'alunos por turma'],
+              ].map(([n, l]) => (
+                <div key={l as string}>
+                  <dt className="font-serif text-3xl text-dourado md:text-4xl">{n}</dt>
+                  <dd className="mt-1 text-xs uppercase tracking-[0.16em] text-cinza">{l}</dd>
+                </div>
+              ))}
+            </dl>
+          </ScrollReveal>
         </div>
       </section>
 
-      {/* ── IMAGEM ESTÚDIO ───────────────────────────────────── */}
+      {/* ── IMAGEM ESTÚDIO ────────────────────────────────── */}
       <section className="relative h-[55vh] min-h-[360px] overflow-hidden md:h-[68vh]">
         <Image
           src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=1800&q=85"
           alt="Aulas práticas em estúdio real Tri Amici"
           fill
+          sizes="100vw"
           className="object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-preto/85 via-preto/45 to-transparent" />
@@ -118,22 +207,47 @@ export default function CursoPage() {
         </div>
       </section>
 
-      {/* ── GRADE CURRICULAR ─────────────────────────────────── */}
+      {/* ── GRADE CURRICULAR — 3 FASES ────────────────────── */}
       <section className="bg-preto py-24">
         <div className="container-page">
           <ScrollReveal>
             <p className="section-kicker">Grade curricular</p>
-            <h2 className="mt-4 font-serif text-4xl md:text-5xl">6 módulos. Do olhar ao mercado.</h2>
+            <h2 className="mt-4 max-w-[22ch] text-balance font-serif text-4xl leading-[1.08] md:text-5xl">
+              6 módulos em 3 fases — <span className="italic text-dourado/95">do olhar ao mercado.</span>
+            </h2>
+            <p className="mt-5 max-w-xl text-base leading-8 text-cinza">
+              Cada fase tem um objetivo claro e leva você a um patamar concreto antes da próxima.
+            </p>
           </ScrollReveal>
-          <div className="mt-14 border-t border-borda">
-            {modulos.map((mod, i) => (
-              <ScrollReveal key={mod.num} delay={i * 0.05}>
-                <div className="group grid grid-cols-[3rem_1fr] gap-6 border-b border-borda py-7 transition-colors hover:bg-escuro/30 md:grid-cols-[5rem_1fr] md:gap-10 md:py-9">
-                  <span className="pt-1 font-serif text-xl text-dourado/50 transition-colors duration-300 group-hover:text-dourado md:text-2xl">{mod.num}</span>
-                  <div>
-                    <h3 className="font-serif text-lg leading-snug md:text-2xl">{mod.titulo}</h3>
-                    <p className="mt-2 text-sm leading-7 text-cinza">{mod.desc}</p>
+
+          <div className="mt-14 space-y-12">
+            {fases.map((f, fi) => (
+              <ScrollReveal key={f.fase} delay={fi * 0.06}>
+                <div>
+                  <div className="grid items-start gap-3 border-b border-dourado/25 pb-5 md:grid-cols-[10rem_1fr] md:gap-10">
+                    <div>
+                      <p className="font-mono text-xs uppercase tracking-[0.22em] text-dourado/70">{f.fase}</p>
+                      <h3 className="mt-1 font-serif text-3xl text-dourado md:text-4xl">{f.titulo}</h3>
+                    </div>
+                    <p className="text-base leading-8 text-branco/80 md:text-lg">{f.resumo}</p>
                   </div>
+
+                  <ul className="mt-2">
+                    {f.modulos.map((mod) => (
+                      <li
+                        key={mod.num}
+                        className="group grid grid-cols-[2.5rem_1fr] gap-5 border-b border-borda py-6 transition-colors hover:bg-escuro/30 md:grid-cols-[4rem_1fr] md:gap-10 md:py-7"
+                      >
+                        <span className="pt-1 font-serif text-xl text-dourado/50 transition-colors duration-300 group-hover:text-dourado md:text-2xl">
+                          {mod.num}
+                        </span>
+                        <div>
+                          <h4 className="font-serif text-lg leading-snug md:text-2xl">{mod.titulo}</h4>
+                          <p className="mt-2 text-sm leading-7 text-cinza">{mod.desc}</p>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </ScrollReveal>
             ))}
@@ -141,13 +255,13 @@ export default function CursoPage() {
         </div>
       </section>
 
-      {/* ── O MÉTODO ─────────────────────────────────────────── */}
+      {/* ── O MÉTODO ──────────────────────────────────────── */}
       <section className="bg-[#0c0c0c] py-24">
         <div className="container-page">
           <ScrollReveal>
             <p className="section-kicker">O método</p>
-            <h2 className="mt-4 max-w-2xl font-serif text-4xl md:text-5xl">
-              Três pilares que transformam olhar em ofício.
+            <h2 className="mt-4 max-w-[22ch] text-balance font-serif text-4xl leading-[1.08] md:text-5xl">
+              Três pilares que transformam <span className="italic text-dourado/95">olhar em ofício.</span>
             </h2>
           </ScrollReveal>
           <div className="mt-14 grid border border-borda md:grid-cols-3">
@@ -164,24 +278,28 @@ export default function CursoPage() {
         </div>
       </section>
 
-      {/* ── MATERIAIS (e-book + fotos dos alunos) ────────────── */}
+      {/* ── MATERIAIS ─────────────────────────────────────── */}
       <Recursos
         titulo="Material do curso e resultados reais."
         descricao="Baixe o e-book com o conteúdo completo e veja o que os alunos produziram durante as aulas."
       />
 
-      {/* ── PARA QUEM É ──────────────────────────────────────── */}
+      {/* ── PARA QUEM É (+ NÃO É PRA VOCÊ SE) ─────────────── */}
       <section className="bg-preto py-24">
         <div className="container-page">
           <ScrollReveal>
             <p className="section-kicker">Para quem é</p>
-            <h2 className="mt-4 font-serif text-4xl md:text-5xl">O curso é feito para você?</h2>
+            <h2 className="mt-4 max-w-3xl font-serif text-4xl md:text-5xl">
+              O curso é feito para você?
+            </h2>
           </ScrollReveal>
+
+          {/* Hobby x Profissão */}
           <div className="mt-14 grid gap-10 md:grid-cols-2 md:gap-0">
             <ScrollReveal delay={0.05}>
               <div className="relative border-l border-dourado pl-8 md:pr-14">
                 <p className="section-kicker">Hobby</p>
-                <h3 className="mt-4 font-serif text-3xl leading-snug md:text-4xl">
+                <h3 className="mt-4 max-w-[18ch] text-balance font-serif text-3xl leading-[1.1] md:text-4xl">
                   Fotografar melhor a própria vida.
                 </h3>
                 <p className="mt-5 leading-7 text-cinza">
@@ -194,17 +312,18 @@ export default function CursoPage() {
                     'Construir um olhar próprio e consistente',
                   ].map((item) => (
                     <li key={item} className="flex items-start gap-3">
-                      <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-dourado" />
-                      {item}
+                      <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-dourado" />
+                      <span>{item}</span>
                     </li>
                   ))}
                 </ul>
               </div>
             </ScrollReveal>
+
             <ScrollReveal delay={0.1}>
               <div className="relative border-l border-dourado/30 pl-8">
                 <p className="section-kicker">Profissão</p>
-                <h3 className="mt-4 font-serif text-3xl leading-snug md:text-4xl">
+                <h3 className="mt-4 max-w-[18ch] text-balance font-serif text-3xl leading-[1.1] md:text-4xl">
                   Cobrar pelo seu olhar.
                 </h3>
                 <p className="mt-5 leading-7 text-cinza">
@@ -217,37 +336,267 @@ export default function CursoPage() {
                     'Primeiros clientes antes de se formar',
                   ].map((item) => (
                     <li key={item} className="flex items-start gap-3">
-                      <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-dourado/50" />
-                      {item}
+                      <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-dourado/70" />
+                      <span>{item}</span>
                     </li>
                   ))}
                 </ul>
               </div>
             </ScrollReveal>
           </div>
+
+          {/* NÃO é pra você se… (honestidade vende) */}
+          <ScrollReveal delay={0.18}>
+            <div className="mt-16 rounded-2xl border border-borda bg-escuro/40 p-7 md:p-10">
+              <p className="section-kicker">Honestidade</p>
+              <h3 className="mt-3 font-serif text-2xl leading-snug text-branco/90 md:text-3xl">
+                Talvez o curso <em className="text-dourado/90">não</em> seja pra você se…
+              </h3>
+              <ul className="mt-6 grid gap-3 text-sm leading-7 text-cinza md:grid-cols-2">
+                {[
+                  'Procura um curso 100% online ou em vídeo (o nosso é presencial).',
+                  'Quer aprender só edição/Lightroom sem técnica de câmera.',
+                  'Não pretende ter uma câmera DSLR ou mirrorless para usar nas aulas.',
+                  'Não tem disponibilidade para um encontro semanal noturno em Sorocaba.',
+                  'Espera virar profissional em duas semanas — aqui leva 6 meses.',
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-3">
+                    <XCircle size={16} className="mt-0.5 shrink-0 text-cinza/70" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </ScrollReveal>
         </div>
       </section>
 
-      {/* ── INFO RÁPIDA ──────────────────────────────────────── */}
-      <section className="bg-[#0c0c0c] py-16">
+      {/* ── MODALIDADES (Padrão x VIP) ────────────────────── */}
+      <section className="bg-preto py-24">
         <div className="container-page">
-          <div className="grid grid-cols-2 gap-px bg-borda md:grid-cols-6">
-            {logistica.map(([label, value]) => (
-              <div key={label} className="flex flex-col gap-2 bg-[#0c0c0c] px-6 py-8">
-                <span className="text-[0.65rem] uppercase tracking-[0.22em] text-cinza">{label}</span>
-                <span className="font-serif text-xl text-branco">{value}</span>
+          <ScrollReveal>
+            <p className="section-kicker">Modalidades</p>
+            <h2 className="mt-4 max-w-2xl font-serif text-4xl md:text-5xl">
+              Duas formas de viver o curso.
+            </h2>
+            <p className="mt-5 max-w-xl text-base leading-8 text-cinza">
+              Mesmo programa, mesma certificação. Você escolhe o ritmo e o nível de proximidade
+              com o professor.
+            </p>
+          </ScrollReveal>
+
+          <div className="mt-12 grid gap-5 md:grid-cols-2">
+            {/* PADRÃO */}
+            <ScrollReveal delay={0.05}>
+              <div className="lift-card flex h-full flex-col border border-borda bg-escuro/60 p-7 md:p-9">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-dourado/80">
+                  Turma Padrão
+                </p>
+                <h3 className="mt-4 font-serif text-3xl leading-snug text-branco md:text-4xl">
+                  O programa completo,<br />em grupo.
+                </h3>
+                <p className="mt-5 text-sm leading-7 text-cinza">
+                  A experiência clássica da escola: turma cheia, troca entre colegas e o ritmo
+                  consagrado em 25 anos de método.
+                </p>
+
+                <ul className="mt-7 space-y-3 text-sm leading-6 text-branco/85">
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-dourado" />
+                    <span>Até <strong>12 alunos</strong> por turma</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-dourado" />
+                    <span>Encontros 1× por semana, à noite</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-dourado" />
+                    <span>Cronograma e dias da semana definidos na formação da turma</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-dourado" />
+                    <span>Troca rica entre colegas e dinâmica de grupo</span>
+                  </li>
+                </ul>
+
+                <div className="mt-auto pt-8">
+                  <Button href="https://wa.me/5515981127508" external>Quero a Turma Padrão</Button>
+                </div>
               </div>
-            ))}
+            </ScrollReveal>
+
+            {/* VIP */}
+            <ScrollReveal delay={0.12}>
+              <div className="lift-card relative flex h-full flex-col overflow-hidden border border-dourado/40 bg-gradient-to-br from-dourado/[0.10] via-escuro/70 to-preto p-7 md:p-9">
+                {/* Selo */}
+                <span className="absolute right-5 top-5 rounded-full border border-dourado/50 bg-preto/70 px-3 py-1 text-[0.62rem] font-semibold uppercase tracking-[0.22em] text-dourado">
+                  Intimista
+                </span>
+
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-dourado">
+                  Turma VIP
+                </p>
+                <h3 className="mt-4 font-serif text-3xl leading-snug text-branco md:text-4xl">
+                  Ateliê privado,<br />atenção redobrada.
+                </h3>
+                <p className="mt-5 text-sm leading-7 text-cinza">
+                  Para quem prefere um ambiente mais reservado — mais tempo de estúdio por
+                  aluno, mais profundidade nos exercícios e maior flexibilidade de calendário.
+                </p>
+
+                <ul className="mt-7 space-y-3 text-sm leading-6 text-branco/90">
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-dourado" />
+                    <span><strong>Poucos alunos</strong> — turma intimista</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-dourado" />
+                    <span>Mais atenção individual do professor</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-dourado" />
+                    <span>Mais tempo de estúdio e prática para cada aluno</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-dourado" />
+                    <span>Mesmo programa, mesmo certificado</span>
+                  </li>
+                </ul>
+
+                <div className="mt-auto pt-8">
+                  <a
+                    href={WHATSAPP_LINK}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn btn-primary"
+                  >
+                    <span className="relative z-[1] flex items-center gap-2">
+                      <MessageCircle size={16} />
+                      Saber mais (VIP)
+                    </span>
+                  </a>
+                </div>
+              </div>
+            </ScrollReveal>
+          </div>
+
+          {/* Próxima turma + Notifique-me */}
+          <ScrollReveal delay={0.2}>
+            <div className="mt-10 flex flex-col items-start justify-between gap-5 rounded-2xl border border-borda bg-escuro/40 p-6 md:flex-row md:items-center md:p-7">
+              <div>
+                <p className="text-xs uppercase tracking-[0.22em] text-dourado/80">Próxima turma</p>
+                <p className="mt-2 font-serif text-xl text-branco md:text-2xl">
+                  Inscrições por semestre — calendário a confirmar.
+                </p>
+                <p className="mt-1 text-sm text-cinza">
+                  O dia da semana é definido na formação da turma.
+                </p>
+              </div>
+              <div className="flex flex-wrap items-center gap-3">
+                <a
+                  href={WHATSAPP_NOTIFY}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-outline"
+                >
+                  <span className="relative z-[1] flex items-center gap-2">
+                    <Bell size={15} />
+                    Avise-me pela próxima turma
+                  </span>
+                </a>
+              </div>
+            </div>
+            <div className="mt-3 pl-1">
+              <NotifyButton />
+            </div>
+          </ScrollReveal>
+        </div>
+      </section>
+
+      {/* ── INFO RÁPIDA + INVESTIMENTO ────────────────────── */}
+      <section className="bg-[#0c0c0c] py-24">
+        <div className="container-page">
+          <div className="grid gap-10 lg:grid-cols-[1.25fr_0.75fr] lg:gap-12">
+            <ScrollReveal>
+              <div>
+                <p className="section-kicker">Resumo prático</p>
+                <h2 className="mt-4 font-serif text-3xl md:text-4xl">Tudo que você precisa saber.</h2>
+                <ul className="mt-8 grid gap-px overflow-hidden rounded-xl bg-borda sm:grid-cols-2 lg:grid-cols-3">
+                  {logistica.map(({ Icon, label, value }) => (
+                    <li key={label} className="group flex items-start gap-4 bg-[#0c0c0c] p-5">
+                      <div className="icon-spring mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-dourado/25 bg-dourado/10 text-dourado">
+                        <Icon className="h-4 w-4" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-[0.65rem] uppercase tracking-[0.22em] text-cinza">{label}</p>
+                        <p className="mt-1 max-w-[14ch] text-balance font-serif text-base leading-tight text-branco md:text-lg">
+                          {value}
+                        </p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+                <p className="mt-4 text-xs leading-6 text-cinza/65">
+                  O dia da semana é definido a cada semestre na formação da turma, em conjunto
+                  com os alunos matriculados. Encontros sempre à noite.
+                </p>
+              </div>
+            </ScrollReveal>
+
+            <ScrollReveal delay={0.1}>
+              <div className="lift-card relative h-full border border-dourado/40 bg-gradient-to-br from-dourado/[0.08] via-escuro/60 to-preto p-7 md:p-9">
+                <p className="section-kicker">Investimento</p>
+                <h3 className="mt-3 font-serif text-3xl leading-tight text-branco md:text-4xl">
+                  Conversamos sobre valor por WhatsApp.
+                </h3>
+                <p className="mt-5 text-sm leading-7 text-cinza">
+                  Preferimos te apresentar o que está incluso (aulas presenciais, estúdio, apostila,
+                  certificado, acesso à galeria) antes de falar de número — e ajustar a melhor
+                  forma de pagamento para o seu caso.
+                </p>
+                <div className="mt-7 flex flex-wrap items-center gap-3">
+                  <a
+                    href={WHATSAPP_LINK}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn btn-primary"
+                  >
+                    <span className="relative z-[1] flex items-center gap-2">
+                      <MessageCircle size={16} />
+                      Consultar pelo WhatsApp
+                    </span>
+                  </a>
+                  <Button href="https://wa.me/5515981127508" external variant="outline">Aula gratuita primeiro</Button>
+                </div>
+              </div>
+            </ScrollReveal>
           </div>
         </div>
       </section>
 
-      {/* ── CTA FINAL ────────────────────────────────────────── */}
+      {/* ── FAQ ──────────────────────────────────────────── */}
+      <section className="bg-preto py-24">
+        <div className="container-page max-w-3xl">
+          <ScrollReveal>
+            <p className="section-kicker">Perguntas frequentes</p>
+            <h2 className="mt-4 font-serif text-3xl md:text-4xl">Antes de você perguntar.</h2>
+          </ScrollReveal>
+
+          <ul className="mt-10 border-t border-borda">
+            {faq.map((item) => (
+              <FaqItem key={item.q} q={item.q} a={item.a} />
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* ── CTA FINAL ────────────────────────────────────── */}
       <section className="relative min-h-[60vh] overflow-hidden bg-preto">
         <Image
           src="https://images.unsplash.com/photo-1495567720989-cebdbdd97913?auto=format&fit=crop&w=1800&q=85"
           alt="Venha conhecer a escola numa aula gratuita"
           fill
+          sizes="100vw"
           className="object-cover opacity-30"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-preto/80 via-preto/50 to-transparent" />
@@ -262,7 +611,7 @@ export default function CursoPage() {
               Sem compromisso. Traga sua câmera ou venha só com curiosidade.
             </p>
             <div className="mt-9">
-              <Button href="/contato">Peça seu convite agora</Button>
+              <Button href="https://wa.me/5515981127508" external>Peça seu convite agora</Button>
             </div>
           </ScrollReveal>
         </div>
