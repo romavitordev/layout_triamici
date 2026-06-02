@@ -24,7 +24,7 @@ export function CtaFinal() {
           a casa pra você decidir com calma.
         </p>
         <div className="mt-9">
-          <Button href="https://wa.me/5515981127508" external>Peça seu convite agora</Button>
+          <Button href="/aula-gratuita">Peça seu convite agora</Button>
         </div>
       </div>
     </section>

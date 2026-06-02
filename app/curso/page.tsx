@@ -420,7 +420,7 @@ export default function CursoPage() {
                 </ul>
 
                 <div className="mt-auto pt-8">
-                  <Button href="https://wa.me/5515981127508" external>Quero a Turma Padrão</Button>
+                  <Button href="/aula-gratuita">Quero a Turma Padrão</Button>
                 </div>
               </div>
             </ScrollReveal>
@@ -611,7 +611,7 @@ export default function CursoPage() {
               Sem compromisso. Traga sua câmera ou venha só com curiosidade.
             </p>
             <div className="mt-9">
-              <Button href="https://wa.me/5515981127508" external>Peça seu convite agora</Button>
+              <Button href="/aula-gratuita">Peça seu convite agora</Button>
             </div>
           </ScrollReveal>
         </div>

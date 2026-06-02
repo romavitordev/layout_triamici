@@ -59,7 +59,7 @@ export function Header() {
 
           {/* CTA desktop */}
           <div className="hidden md:block">
-            <Button href="https://wa.me/5515981127508" external className="min-h-10 px-4 py-2">Aula grátis</Button>
+            <Button href="/aula-gratuita" className="min-h-10 px-4 py-2">Aula grátis</Button>
           </div>
 
         </div>

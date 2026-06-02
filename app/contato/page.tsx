@@ -119,7 +119,7 @@ export default function ContatoPage() {
               </p>
             </div>
             <div className="mt-6 md:mt-0">
-              <Button href="https://wa.me/5515981127508" external>Quero a aula gratuita</Button>
+              <Button href="/aula-gratuita">Quero a aula gratuita</Button>
             </div>
           </div>
         </ScrollReveal>
